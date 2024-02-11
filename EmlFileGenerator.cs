@@ -163,13 +163,19 @@ namespace GenerateEmlFile
 
             if (emailArgs.From.Trim() == string.Empty || !IsEmailAddress(emailArgs.From))
             {
-                Console.WriteLine("From argument needs to contain a valid email address.");
+                Console.WriteLine("-f argument needs to contain a valid email address.");
                 validArgs = false;
             }
 
             if (emailArgs.To.Trim() == string.Empty || !IsEmailAddress(emailArgs.To))
             {
-                Console.WriteLine("To argument needs to contain a valid email address.");
+                Console.WriteLine("-t argument needs to contain a valid email address.");
+                validArgs = false;
+            }
+
+            if (emailArgs.OutputDir.Trim() == string.Empty && Directory.Exists(emailArgs.OutputDir))
+            {
+                Console.WriteLine("-d argument needs to contain a valid destination path for the eml file.");
                 validArgs = false;
             }
 
