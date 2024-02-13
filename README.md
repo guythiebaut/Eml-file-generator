@@ -10,4 +10,4 @@ Command line switches
 
 Example
 
--d "c:\temp" -f "mail@gmail.com" -t "import@mail.com" -s "Test email" -b "Test email body." -a "c:\temp\test.txt" "c:\temp\test2.txt"
+GenerateEmlFile -d "c:\temp" -f "mail@gmail.com" -t "import@mail.com" -s "Test email" -b "Test email body." -a "c:\temp\test.txt" "c:\temp\test2.txt"
