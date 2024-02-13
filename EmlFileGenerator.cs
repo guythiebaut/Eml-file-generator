@@ -173,7 +173,7 @@ namespace GenerateEmlFile
                 validArgs = false;
             }
 
-            if (emailArgs.OutputDir.Trim() == string.Empty && Directory.Exists(emailArgs.OutputDir))
+            if (emailArgs.OutputDir.Trim() == string.Empty || !Directory.Exists(emailArgs.OutputDir))
             {
                 Console.WriteLine("-d argument needs to contain a valid destination path for the eml file.");
                 validArgs = false;
