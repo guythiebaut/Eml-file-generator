@@ -23,12 +23,12 @@ namespace GenerateEmlFile
 
             var emailArgs = UnpackArgs(args);
 
-            if (!ArgsAreValid(emailArgs))
+            if (emailArgs.HelpInvoked)
             {
                 return;
             }
 
-            if (emailArgs.HelpInvoked)
+            if (!ArgsAreValid(emailArgs))
             {
                 return;
             }
@@ -136,7 +136,7 @@ namespace GenerateEmlFile
             Console.WriteLine("");
             Console.WriteLine("Example");
             Console.WriteLine("");
-            Console.WriteLine("-d \"c:\\temp\" -f \"mail@gmail.com\" -t \"import@mail.com\" -s \"Test email\" -b \"Test email body.\" -a \"c:\\temp\\test.txt\" \"c:\\temp\\test2.txt\"");
+            Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} -d \"c:\\temp\" -f \"mail@gmail.com\" -t \"import@mail.com\" -s \"Test email\" -b \"Test email body.\" -a \"c:\\temp\\test.txt\" \"c:\\temp\\test2.txt\"");
             Console.WriteLine("");
         }
 
