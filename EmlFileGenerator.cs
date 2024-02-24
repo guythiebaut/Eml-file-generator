@@ -1,6 +1,7 @@
 ﻿using System.Net.Mail;
 using System.Net;
 using System.Text.RegularExpressions;
+using static GenerateEmlFile.EmlFileGenerator;
 
 namespace GenerateEmlFile
 {
@@ -9,13 +10,13 @@ namespace GenerateEmlFile
     {
         internal class EmailArgs
         {
-            internal string From = string.Empty;
-            internal string To = string.Empty;
-            internal string Subject = string.Empty;
-            internal string Body = string.Empty;
+            internal string? From;
+            internal string? To;
+            internal string? Subject;
+            internal string? Body;
             internal List<string> Files = new List<string>();
-            internal string OutputDir = string.Empty;
-            internal bool HelpInvoked = false;
+            internal string? OutputDir;
+            internal bool HelpInvoked;
         }
 
         public void CreateEmlFile(string[] args)
@@ -79,23 +80,26 @@ namespace GenerateEmlFile
                 switch (args[i])
                 {
                     case "-d":
-                        emailArgs.OutputDir = args[i + 1];
+                        emailArgs.OutputDir = GetNextArg(args, i);
+                        RequestHelpIfNeeded(ref emailArgs, emailArgs.OutputDir);
                         i++;
                         break;
                     case "-f":
-                        emailArgs.From = args[i + 1];
+                        emailArgs.From = GetNextArg(args, i);
+                        RequestHelpIfNeeded(ref emailArgs, emailArgs.From);
                         i++;
                         break;
                     case "-t":
-                        emailArgs.To = args[i + 1];
+                        emailArgs.To = GetNextArg(args, i);
+                        RequestHelpIfNeeded(ref emailArgs, emailArgs.To);
                         i++;
                         break;
                     case "-s":
-                        emailArgs.Subject = args[i + 1];
+                        emailArgs.Subject = GetNextArg(args, i);
                         i++;
                         break;
                     case "-b":
-                        emailArgs.Body = args[i + 1];
+                        emailArgs.Body = GetNextArg(args, i);
                         i++;
                         break;
                     case "-a":
@@ -104,23 +108,48 @@ namespace GenerateEmlFile
                         break;
                     case "-h":
                         emailArgs.HelpInvoked = true;
-                        DisplayHelp();
                         i++;
                         break;
                     default:
                         emailArgs.HelpInvoked = true;
-                        DisplayHelp();
                         i++;
                         break;
                 }
 
                 if (emailArgs.HelpInvoked)
                 {
+                    DisplayHelp();
                     break;
                 }
             }
 
             return emailArgs;
+        }
+
+        private EmailArgs RequestHelpIfNeeded(ref EmailArgs emailArgs, string value)
+        {
+            if (value == string.Empty)
+            {
+                emailArgs.HelpInvoked = true;
+            }
+
+            return emailArgs;
+        }
+
+        private string GetNextArg(string[] args, int i)
+        {
+            string returnValue;
+
+            try
+            {
+                returnValue = args[i + 1];
+            }
+            catch (Exception)
+            {
+                returnValue = string.Empty;
+            }
+
+            return returnValue;
         }
 
         private void DisplayHelp()
@@ -161,25 +190,30 @@ namespace GenerateEmlFile
         {
             bool validArgs = true;
 
-            if (emailArgs.From.Trim() == string.Empty || !IsEmailAddress(emailArgs.From))
+            if (!EmailValidated(emailArgs.From))
             {
                 Console.WriteLine("-f argument needs to contain a valid email address.");
                 validArgs = false;
             }
 
-            if (emailArgs.To.Trim() == string.Empty || !IsEmailAddress(emailArgs.To))
+            if (!EmailValidated(emailArgs.To))
             {
                 Console.WriteLine("-t argument needs to contain a valid email address.");
                 validArgs = false;
             }
 
-            if (emailArgs.OutputDir.Trim() == string.Empty || !Directory.Exists(emailArgs.OutputDir))
+            if (string.IsNullOrEmpty(emailArgs.OutputDir) || !Directory.Exists(emailArgs.OutputDir))
             {
                 Console.WriteLine("-d argument needs to contain a valid destination path for the eml file.");
                 validArgs = false;
             }
 
             return validArgs;
+        }
+
+        private bool EmailValidated(string? email)
+        {
+            return string.IsNullOrEmpty(email) || !IsEmailAddress(email);
         }
 
         private bool IsEmailAddress(string email)
